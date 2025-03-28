@@ -3,14 +3,14 @@ import axios from "axios";
 
 const Home = () => {
     const [message, setMessage] = useState("");
-    const [financialData, setFinancialData] = useState<any>(null);
+    const [financialData, setFinancialData] = useState<string>("");  // Maintenant une chaîne HTML
     const [symbol, setSymbol] = useState("AAPL"); // Exemple : Apple stock symbol
 
     useEffect(() => {
         // Récupérer les données depuis l'API backend de Spring Boot
         axios.get(`http://localhost:8080/get-financial-data?symbol=${symbol}`)
             .then(response => {
-                setFinancialData(response.data);
+                setFinancialData(response.data);  // Contenu HTML dans `response.data`
                 setMessage("Données financières récupérées avec succès.");
             })
             .catch(error => {
@@ -26,7 +26,11 @@ const Home = () => {
             {financialData ? (
                 <div className="bg-white p-4 rounded-lg shadow-md">
                     <h2 className="text-2xl font-semibold">Données financières pour {symbol}</h2>
-                    <pre className="mt-2 text-sm">{JSON.stringify(financialData, null, 2)}</pre>
+                    {/* Affichage du contenu HTML récupéré */}
+                    <div
+                        className="mt-2 text-sm"
+                        dangerouslySetInnerHTML={{ __html: financialData }}
+                    />
                 </div>
             ) : (
                 <p className="mt-4 text-xl text-gray-500">Aucune donnée à afficher.</p>
