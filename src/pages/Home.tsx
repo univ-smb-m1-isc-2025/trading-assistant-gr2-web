@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+import './Home.css';
 
 // Enregistrement des composants Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Home = () => {
     const [message, setMessage] = useState<string>("");
-    const [symbol, setSymbol] = useState<string>("AAPL"); // Exemple : Apple stock
+    const [symbol, setSymbol] = useState<string>("AIR.PA"); // Défaut : Airbus
     const [period, setPeriod] = useState<string>("1mo"); // Par défaut, afficher les 1 mois
     const [historicalData, setHistoricalData] = useState<{ date: string; close: number }[]>([]);
 
@@ -19,6 +20,37 @@ const Home = () => {
         { label: "6 mois", value: "6mo" },
         { label: "1 an", value: "1y" },
         { label: "5 ans", value: "5y" }
+    ];
+
+    const cac40Symbols = [
+        { label: "Airbus", value: "AIR.PA" },
+        { label: "Air Liquide", value: "AI.PA" },
+        { label: "Accor", value: "ACCP.PA" },
+        { label: "ArcelorMittal", value: "AC.PA" },
+        { label: "Atos", value: "ATOS.PA" },
+        { label: "Schneider Electric", value: "SU.PA" },
+        { label: "BNP Paribas", value: "BNPP.PA" },
+        { label: "Bouygues", value: "EN.PA" },
+        { label: "Capgemini", value: "CAP.PA" },
+        { label: "Carrefour", value: "CA.PA" },
+        { label: "Saint-Gobain", value: "SGO.PA" },
+        { label: "LVMH", value: "MC.PA" },
+        { label: "Michelin", value: "ML.PA" },
+        { label: "L'Oréal", value: "OR.PA" },
+        { label: "Orange", value: "ORA.PA" },
+        { label: "Publicis", value: "PUB.PA" },
+        { label: "Pernod Ricard", value: "RI.PA" },
+        { label: "Renault", value: "RNO.PA" },
+        { label: "Safran", value: "SAFT.PA" },
+        { label: "Sanofi", value: "SAN.PA" },
+        { label: "Société Générale", value: "SGOB.PA" },
+        { label: "STMicroelectronics", value: "STM.PA" },
+        { label: "TotalEnergies", value: "TTE.PA" },
+        { label: "Unibail-Rodamco-Westfield", value: "UG.PA" },
+        { label: "Veolia", value: "VIE.PA" },
+        { label: "Vivendi", value: "VIV.PA" },
+        { label: "Vinci", value: "DG.PA" },
+        { label: "Worldline", value: "WLDGF.PA" }
     ];
 
     useEffect(() => {
@@ -56,30 +88,26 @@ const Home = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 py-8 px-4">
-            
-            {/* Titre Principal */}
-            <h1 className="text-5xl font-bold text-gray-800 text-center mb-8">
+        <div className="home-container">
+            <h1 className="home-title">
                 {message || "Chargement..."}
             </h1>
-
-            {/* Zone des paramètres */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-10 w-full max-w-5xl">
-                
-                {/* Input du symbole */}
-                <input
-                    type="text"
+            <div className="settings-container">
+                <select
                     value={symbol}
-                    onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-                    className="w-full md:w-1/3 px-4 py-3 text-lg border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    placeholder="Entrez un symbole (ex: AAPL)"
-                />
-
-                {/* Sélecteur de période */}
+                    onChange={(e) => setSymbol(e.target.value)}
+                    className="select-field"
+                >
+                    {cac40Symbols.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
                 <select
                     value={period}
                     onChange={(e) => setPeriod(e.target.value)}
-                    className="w-full md:w-1/4 px-4 py-3 text-lg border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="select-field"
                 >
                     {periods.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -88,15 +116,13 @@ const Home = () => {
                     ))}
                 </select>
             </div>
-
-            {/* Graphique agrandi */}
-            <div className="bg-white shadow-lg rounded-lg w-full max-w-6xl p-8">
+            <div className="chart-container">
                 {historicalData.length > 0 ? (
-                    <div className="h-[500px]">
+                    <div className="chart">
                         <Line key={period} data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
                     </div>
                 ) : (
-                    <p className="text-xl text-gray-500 text-center">Aucune donnée à afficher.</p>
+                    <p className="no-data">Aucune donnée à afficher.</p>
                 )}
             </div>
         </div>
