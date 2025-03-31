@@ -54,7 +54,7 @@ const Home = () => {
     ];
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/finance/history/${symbol}?range=${period}`)
+        axios.get(`https://api.berich.oups.net/finance/history/${symbol}?range=${period}`)
             .then(response => {
                 const result = response.data.chart.result[0];
                 const closePrices = result.indicators.quote[0].close;
