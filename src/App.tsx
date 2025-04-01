@@ -18,6 +18,9 @@ function App() {
             <Routes>
                 <Route path="/" element={<Register />} />
             </Routes>
+            <Routes>
+                <Route path="/home" element={<Home />} />
+            </Routes>
         </Router>
     );
 }
