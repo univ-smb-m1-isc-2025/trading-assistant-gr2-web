@@ -1,0 +1,114 @@
+/* src/components/Form.css */
+.form-container {
+    max-width: 400px;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e8e8e8;
+  }
+  
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-weight: 600;
+    font-size: 1.8em;
+  }
+  
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+    font-size: 0.9em;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .form-group input:focus,
+  .form-group input:hover {
+    outline: none;
+    border-color: #1890ff; /* Bleu primaire au focus/survol */
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #1890ff; /* Bleu primaire */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #40a9ff; /* Bleu plus clair au survol */
+  }
+  
+  button[type="submit"]:disabled {
+      background-color: #91d5ff; /* Bleu très clair si désactivé */
+      cursor: not-allowed;
+  }
+  
+  /* Messages succès/erreur */
+  .success-message,
+  .error-message {
+    padding: 12px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+  }
+  
+  .success-message {
+    color: #52c41a; /* Vert */
+    background-color: #f6ffed;
+    border: 1px solid #b7eb8f;
+  }
+  
+  .error-message {
+    color: #ff4d4f; /* Rouge */
+    background-color: #fff1f0;
+    border: 1px solid #ffa39e;
+  }
+  
+  .field-error {
+    color: #ff4d4f; /* Rouge */
+    font-size: 0.8em;
+    display: block;
+    margin-top: 4px;
+  }
+  
+  /* Liens de navigation sous les formulaires */
+  .form-container .navigation-link { /* Ajoutez cette classe au <p> contenant le <Link> */
+      margin-top: 25px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+  }
+  
+  .form-container .navigation-link a {
+      color: #1890ff;
+      font-weight: 500;
+  }
+  
+  .form-container .navigation-link a:hover {
+      text-decoration: underline;
+  }
