@@ -2,7 +2,6 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios, { AxiosError } from "axios"; // Import Axios types
 import { Link, useNavigate } from "react-router-dom";
 import "./Form.css";
-import logoPath from "../assets/logo.svg";
 
 // --- Define Interfaces for Structure and Type Safety ---
 

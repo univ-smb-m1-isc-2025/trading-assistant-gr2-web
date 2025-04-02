@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 // Importez votre contexte d'authentification si vous en utilisez un
 // import { AuthContext } from '../context/AuthContext';
