@@ -27,10 +27,10 @@ const LoginPage: React.FC = () => {
 
   const { usernameOrEmail, password } = formData;
 
-  // URL de l'API de login (adaptez si besoin, ex: http://localhost:8080 pour local)
-  const API_LOGIN_URL = 'http://localhost:8080/api/login'; // Chemin relatif si servi depuis le même domaine, sinon URL complète
-  // const API_LOGIN_URL = 'http://localhost:8080/api/login'; // Pour le test local
-  // const API_LOGIN_URL = 'https://api.beRich.oups.net/api/login'; // Pour le déploiement classe
+
+  const API_LOGIN_URL = 'https://api.beRich.oups.net/api/login';
+  // const API_LOGIN_URL = 'http://localhost:8080/api/login';
+
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
