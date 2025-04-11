@@ -53,6 +53,9 @@ const Home = () => {
         { label: "Worldline", value: "WLDGF.PA" }
     ];
 
+    //const serverURL = "https://api.berich.oups.net/finance/history/${symbol}?range=${period}";
+    //const localURL = "http://localhost:8080/finance/history/${symbol}?range=${period}";
+
     useEffect(() => {
         axios.get(`https://api.berich.oups.net/finance/history/${symbol}?range=${period}`)
             .then(response => {

@@ -1,9 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-// Importez votre contexte d'authentification si vous en utilisez un
-// import { AuthContext } from '../context/AuthContext';
-import './Form.css'; // Réutilisez le style si applicable'
+import './Form.css'; 
 
 // Interfaces pour la requête et la réponse
 interface LoginFormData {
@@ -29,7 +27,7 @@ const LoginPage: React.FC = () => {
 
 
   const API_LOGIN_URL = 'https://api.beRich.oups.net/api/login';
-  // const API_LOGIN_URL = 'http://localhost:8080/api/login';
+  //const API_LOGIN_URL = 'http://localhost:8080/api/login';
 
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {

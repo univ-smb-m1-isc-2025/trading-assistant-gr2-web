@@ -47,13 +47,13 @@ const Register: React.FC = () => {
   const [message, setMessage] = useState<string>(""); // For success/general messages
   const [error, setError] = useState<string>(""); // For general error messages
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({}); // For specific field errors
-
+  
   const { username, email, password } = formData;
-
+  
   // IMPORTANT: Update API URL to your backend host
   const API_URL = "https://api.beRich.oups.net/api/register";
 
-  //const API_URL = http://localhost:8080/api/register
+  //const API_URL = "http://localhost:8080/api/register";
 
   // --- Event Handlers ---
 
