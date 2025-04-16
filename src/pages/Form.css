@@ -112,3 +112,41 @@
   .form-container .navigation-link a:hover {
       text-decoration: underline;
   }
+
+  /* Ajouter à src/components/Form.css */
+
+.divider {
+  text-align: center;
+  margin: 25px 0; /* Espace autour */
+  color: #aaa;
+  font-weight: 500;
+  font-size: 0.9em;
+  position: relative;
+  text-transform: uppercase;
+}
+
+/* Lignes de chaque côté du "OU" */
+.divider::before,
+.divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 25px); /* Ajustez la largeur des lignes */
+  height: 1px;
+  background-color: #e0e0e0; /* Couleur de la ligne */
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.google-login-button-container {
+  display: flex;
+  justify-content: center; /* Centre le bouton Google */
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
