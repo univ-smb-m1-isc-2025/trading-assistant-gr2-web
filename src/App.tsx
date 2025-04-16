@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Register from "./pages/Register"; // Ou pages/RegisterPage
 import LoginPage from "./pages/Login";
 import HomePage from "./pages/Home";
+import EmailSender from "./components/EmailSender";
 import './App.css';
 import { JSX } from "react";
 
@@ -34,6 +35,15 @@ function App() {
                     path="/"
                     element={localStorage.getItem('authToken') ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />}
                 />
+                <Route
+                    path="/test-email"
+                    element={
+                        <PrivateRoute>
+                            <EmailSender />
+                        </PrivateRoute>
+                    }
+                />
+
 
                 {/* Vous pouvez ajouter une page 404 */}
                 {/* <Route path="*" element={<NotFoundPage />} /> */}
