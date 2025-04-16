@@ -28,10 +28,10 @@ const LoginPage: React.FC = () => {
 
   const { usernameOrEmail, password } = formData;
 
-  //const API_LOGIN_URL = "https://api.beRich.oups.net/api/login";
-  const API_LOGIN_URL = 'http://localhost:8080/api/login';
-  //const API_GOOGLE_AUTH_URL = "https://api.beRich.oups.net/api/auth/google";
-  const API_GOOGLE_AUTH_URL = 'http://localhost:8080/api/auth/google'
+  const API_LOGIN_URL = "https://api.beRich.oups.net/api/login";
+  //const API_LOGIN_URL = 'http://localhost:8080/api/login';
+  const API_GOOGLE_AUTH_URL = "https://api.beRich.oups.net/api/auth/google";
+  //const API_GOOGLE_AUTH_URL = 'http://localhost:8080/api/auth/google'
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
