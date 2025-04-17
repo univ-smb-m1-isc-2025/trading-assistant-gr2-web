@@ -4,6 +4,9 @@ import LoginPage from "./pages/Login";
 import HomePage from "./pages/Home";
 import './App.css';
 import { JSX } from "react";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const googleClientId ="156580473624-avdc8usdprcdv0h31hahk6sg0ipmcqn1.apps.googleusercontent.com"
 
 // --- Optionnel: Composant pour les routes privées ---
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
@@ -13,6 +16,7 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
 
 function App() {
     return (
+      <GoogleOAuthProvider clientId={googleClientId}>
         <Router>
             <Routes>
                 <Route path="/register" element={<Register />} />
@@ -39,6 +43,7 @@ function App() {
                 {/* <Route path="*" element={<NotFoundPage />} /> */}
             </Routes>
         </Router>
+        </GoogleOAuthProvider>
     );
 }
 
