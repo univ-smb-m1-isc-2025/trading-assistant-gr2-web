@@ -14,6 +14,9 @@ const Home = () => {
     const [symbol, setSymbol] = useState<string>("AIR.PA"); // Défaut : Airbus
     const [period, setPeriod] = useState<string>("1mo"); // Par défaut, afficher les 1 mois
     const [historicalData, setHistoricalData] = useState<{ date: string; close: number }[]>([]);
+    const [favorites, setFavorites] = useState<{ ticker: string; name: string }[]>([]);
+    const [loadingFavorites, setLoadingFavorites] = useState<boolean>(false);
+    const [favoritesError, setFavoritesError] = useState<string>('');
 
     const [favoriteStatus, setFavoriteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [favoriteError, setFavoriteError] = useState<string>('');
@@ -207,6 +210,75 @@ const Home = () => {
                 }
             }
         };
+    
+        const loadFavorites = async () => {
+            setLoadingFavorites(true);
+            setFavoritesError('');
+            
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                setFavoritesError("Non connecté");
+                setLoadingFavorites(false);
+                return;
+            }
+            
+            try {
+                const API_BASE_URL = 'http://localhost:8080';
+                const response = await axios.get(`${API_BASE_URL}/api/star`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    withCredentials: true
+                });
+                
+                setFavorites(response.data);
+            } catch (error) {
+                console.error("Erreur lors du chargement des favoris:", error);
+                setFavoritesError("Impossible de charger les favoris");
+            } finally {
+                setLoadingFavorites(false);
+            }
+        };
+    
+        // Fonction pour supprimer un favori
+        const handleRemoveFavorite = async (ticker: string) => {
+            const token = localStorage.getItem('authToken');
+            if (!token) return;
+            
+            try {
+                const API_BASE_URL = 'http://localhost:8080';
+                await axios.delete(`${API_BASE_URL}/api/star/${ticker}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    withCredentials: true
+                });
+                
+                // Mettre à jour la liste des favoris après suppression
+                setFavorites(favorites.filter(fav => fav.ticker !== ticker));
+                
+            } catch (error) {
+                console.error("Erreur lors de la suppression du favori:", error);
+                setFavoriteError("Impossible de supprimer le favori");
+            }
+        };
+    
+        // Fonction pour sélectionner un favori et afficher son graphique
+        const handleSelectFavorite = (ticker: string) => {
+            setSymbol(ticker);
+        };
+    
+        // Ajouter un effet pour charger les favoris au chargement du composant
+        useEffect(() => {
+            loadFavorites();
+        }, []);
+    
+        // Ajouter un effet pour recharger les favoris après l'ajout d'un nouveau favori
+        useEffect(() => {
+            if (favoriteStatus === 'success') {
+                loadFavorites();
+            }
+        }, [favoriteStatus]);
 
     // --- NOUVELLE STRUCTURE DU RETURN ---
     return (
@@ -268,18 +340,36 @@ const Home = () => {
 
         {/* --- NOUVEAU : Section Mes Favoris --- */}
         <div className="sidebar-section favorites-section">
-          <h4>Mes Favoris</h4>
-          {/* Pour l'instant, une liste statique ou un message */}
-          <ul className="favorites-list">
-             <li><button className="favorite-item">AIR.PA</button> <button className="remove-favorite-button">×</button></li>
-             <li><button className="favorite-item">MC.PA</button> <button className="remove-favorite-button">×</button></li>
-             {/* Plus tard, cette liste sera dynamique */}
-          </ul>
-           <p style={{fontSize: '0.8em', color: 'rgba(255, 255, 255, 0.5)'}}>
-             (Cliquez sur un favori pour afficher son graphique)
-           </p>
-        </div>
-         {/* --- FIN NOUVEAU --- */}
+      <h4>Mes Favoris</h4>
+      {loadingFavorites ? (
+        <p>Chargement...</p>
+      ) : favoritesError ? (
+        <p className="error">{favoritesError}</p>
+      ) : favorites.length === 0 ? (
+        <p>Aucun favori ajouté</p>
+      ) : (
+        <ul className="favorites-list">
+          {favorites.map((favorite) => (
+            <li key={favorite.ticker}>
+              <button 
+                className="favorite-item" 
+                onClick={() => handleSelectFavorite(favorite.ticker)}
+                title={favorite.name}
+              >
+                {favorite.ticker}
+              </button>
+              <button 
+                className="remove-favorite-button"
+                onClick={() => handleRemoveFavorite(favorite.ticker)}
+                title="Supprimer des favoris"
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
 
             {/* Bouton de déconnexion en bas de la sidebar */}
             <div className="sidebar-logout">

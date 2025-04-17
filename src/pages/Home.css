@@ -1,29 +1,31 @@
 /* src/pages/Home.css */
-
-/* Conteneur principal Flexbox */
-.dashboard-layout {
-    display: flex;
-    /* Calcule la hauteur pour remplir l'écran sous une navbar de 60px */
-    /* Si vous n'utilisez PAS la Navbar de App.tsx, mettez '100vh' */
-    min-height: calc(100vh - 60px);
-    background-color: #f0f2f5; /* Fond de la zone principale */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
   }
   
-  /* Barre latérale */
+  /* Conteneur principal Flexbox */
+  .dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+  }
+  
+  /* Barre latérale - version corrigée */
   .dashboard-sidebar {
-    width: 260px;        /* Largeur fixe */
-    flex-shrink: 0;      /* Empêche de rétrécir */
-    background-color: #001529; /* Fond sombre (bleu nuit) */
-    color: rgba(255, 255, 255, 0.8); /* Texte clair */
+    width: 260px;
+    flex-shrink: 0;
+    background-color: #001529;
+    color: rgba(255, 255, 255, 0.8);
     padding: 25px 20px;
-    /* Hauteur fixe pour remplir l'espace sous la navbar */
-    /* Si pas de Navbar, mettez '100vh' */
-    height: calc(100vh - 60px);
-    position: sticky;    /* Reste visible au scroll */
-    top: 60px;           /* Se positionne sous la navbar (si navbar fixe de 60px) */
-                         /* Si pas de Navbar, mettez '0' */
-    overflow-y: auto;    /* Permet de scroller DANS la sidebar si contenu trop long */
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    height: 100vh; /* Utiliser 100vh pour prendre toute la hauteur de la fenêtre */
+    overflow-y: auto;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+    
+    /* Configuration flex pour positionner le bouton déconnexion en bas */
+    display: flex;
+    flex-direction: column;
   }
   
   .dashboard-sidebar h3 {
@@ -91,9 +93,10 @@
   
   /* Contenu Principal */
   .dashboard-main {
-    flex-grow: 1;       /* Prend tout l'espace restant */
-    padding: 30px 40px; /* Espace intérieur */
-    overflow-y: auto;   /* Permet le scroll si contenu dépasse */
+    flex-grow: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+    min-height: 100vh; /* Forcer la hauteur minimale */
   }
   
   /* Styles existants pour le titre et le graphique, peuvent rester */
@@ -211,12 +214,7 @@
       opacity: 1;
   }
   
-  /* Ajustement pour la section logout pour qu'elle soit bien en bas */
-  .dashboard-sidebar {
-      /* ... (styles existants) ... */
-      display: flex;
-      flex-direction: column; /* Organise les éléments en colonne */
-  }
+
   .sidebar-logout {
       margin-top: auto; /* Pousse cette section vers le bas */
        /* ... (styles existants) ... */
