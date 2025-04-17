@@ -17,6 +17,9 @@ const Home = () => {
     const [favorites, setFavorites] = useState<{ ticker: string; name: string }[]>([]);
     const [loadingFavorites, setLoadingFavorites] = useState<boolean>(false);
     const [favoritesError, setFavoritesError] = useState<string>('');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteError, setDeleteError] = useState('');
+    const [deleting, setDeleting] = useState(false);
 
     const [favoriteStatus, setFavoriteStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [favoriteError, setFavoriteError] = useState<string>('');
@@ -210,6 +213,89 @@ const Home = () => {
                 }
             }
         };
+
+        // Updated handleDeleteAccount function with better debugging
+const handleDeleteAccount = async () => {
+    setDeleting(true);
+    setDeleteError('');
+  
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        setDeleteError("Vous n'êtes pas connecté");
+        setDeleting(false);
+        return;
+    }
+  
+    try {
+        const API_BASE_URL = 'http://localhost:8080';
+        const endpoint = `${API_BASE_URL}/api/user/delete`;
+        
+        // Debug the request
+        console.log(`Sending DELETE request to: ${endpoint}`);
+        console.log(`Using token (first 10 chars): ${token.substring(0, 10)}...`);
+        
+        // Check if token is properly formatted (should start with "ey")
+        if (!token.startsWith('ey')) {
+            console.warn("Warning: Token doesn't start with 'ey'. It might not be a valid JWT.");
+        }
+        
+        // Detailed request configuration for debugging
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true // Important for CORS with credentials
+        };
+        console.log("Request config:", JSON.stringify(config, null, 2));
+        
+        // Make the request with explicit debugging
+        const response = await axios.delete(endpoint, config);
+        
+        console.log("Delete account response:", response);
+    
+        // Déconnexion après suppression réussie
+        localStorage.removeItem('authToken');
+        navigate('/login', { state: { message: "Votre compte a été supprimé avec succès" } });
+    } catch (error) {
+        console.error("Erreur lors de la suppression du compte:", error);
+        
+        // Enhanced error debugging
+        if (axios.isAxiosError(error)) {
+            console.error("Status code:", error.response?.status);
+            console.error("Response data:", error.response?.data);
+            console.error("Response headers:", error.response?.headers);
+            
+            // Handle specific HTTP status codes
+            if (error.response?.status === 404) {
+                setDeleteError("L'API de suppression de compte n'est pas accessible. Vérifiez que l'endpoint /api/user/delete existe sur le serveur.");
+            } else if (error.response?.status === 403) {
+                setDeleteError("Vous n'êtes pas autorisé à supprimer ce compte. Essayez de vous reconnecter.");
+                
+                // Force logout on auth errors
+                setTimeout(() => {
+                    localStorage.removeItem('authToken');
+                    navigate('/login', { state: { message: "Session expirée. Veuillez vous reconnecter." } });
+                }, 3000);
+            } else if (error.response?.status === 401) {
+                setDeleteError("Session expirée. Veuillez vous reconnecter.");
+                
+                setTimeout(() => {
+                    localStorage.removeItem('authToken');
+                    navigate('/login');
+                }, 2000);
+            } else {
+                setDeleteError(
+                    error.response?.data || "Une erreur est survenue lors de la suppression du compte"
+                );
+            }
+        } else {
+            setDeleteError("Une erreur inattendue est survenue. Veuillez réessayer plus tard.");
+        }
+        
+        setDeleting(false);
+    }
+};
     
         const loadFavorites = async () => {
             setLoadingFavorites(true);
@@ -234,7 +320,12 @@ const Home = () => {
                 setFavorites(response.data);
             } catch (error) {
                 console.error("Erreur lors du chargement des favoris:", error);
-                setFavoritesError("Impossible de charger les favoris");
+                // Correction ici: Vérification du type d'erreur
+                if (axios.isAxiosError(error)) {
+                    setFavoritesError(error.response?.data?.message || "Impossible de charger les favoris");
+                } else {
+                    setFavoritesError("Impossible de charger les favoris");
+                }
             } finally {
                 setLoadingFavorites(false);
             }
@@ -259,7 +350,12 @@ const Home = () => {
                 
             } catch (error) {
                 console.error("Erreur lors de la suppression du favori:", error);
-                setFavoriteError("Impossible de supprimer le favori");
+                // Correction ici: Vérification du type d'erreur
+                if (axios.isAxiosError(error)) {
+                    setFavoriteError(error.response?.data?.message || "Impossible de supprimer le favori");
+                } else {
+                    setFavoriteError("Impossible de supprimer le favori");
+                }
             }
         };
     
@@ -280,128 +376,158 @@ const Home = () => {
             }
         }, [favoriteStatus]);
 
-    // --- NOUVELLE STRUCTURE DU RETURN ---
-    return (
-        // Conteneur principal pour la mise en page flex
-        <div className="dashboard-layout">
-
-          {/* --- Colonne Sidebar (gauche) --- */}
-          <aside className="dashboard-sidebar">
-            <h3>beRich</h3>
-
-        {/* --- Section Sélection Titre --- */}
-        <div className="sidebar-section symbol-selection"> {/* Ajout classe pour style */}
-          <label htmlFor="symbol-select">Titre à Surveiller :</label>
-          <div className="select-with-action"> {/* Wrapper pour select + bouton */}
-             <select
-               id="symbol-select"
-               value={symbol}
-               onChange={(e) => setSymbol(e.target.value)}
-               className="select-field"
-             >
-               {cac40Symbols.map((option) => (
-                   <option key={option.value} value={option.value}>
-                       {option.label}
-                   </option>
-               ))}
-             </select>
-             {/* --- NOUVEAU : Bouton Ajouter Favori (non fonctionnel) --- */}
-             <button
-                    onClick={handleAddFavorite} // <-- Appel de la nouvelle fonction
-                    className="add-favorite-button"
-                    title={`Ajouter ${symbol} aux favoris`}
-                    disabled={favoriteStatus === 'loading'} // Désactive pendant chargement
-                 >
-                   {favoriteStatus === 'loading' ? '...' : '⭐'}
-                 </button>
-                 {/* --- FIN MODIFICATION --- */}
-              </div>
-               {/* Afficher l'erreur d'ajout de favori */}
-               {favoriteError && <p className="field-error" style={{marginTop: '5px'}}>{favoriteError}</p>}
-            </div>
-
-
-             {/* Section pour choisir la période */}
-            <div className="sidebar-section">
-              <label htmlFor="period-select">Période :</label>
-              <select
-                id="period-select"
-                value={period}
-                onChange={(e) => setPeriod(e.target.value)}
-                className="select-field"
-              >
-                 {periods.map((option) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                 ))}
-              </select>
-            </div>
-
-        {/* --- NOUVEAU : Section Mes Favoris --- */}
-        <div className="sidebar-section favorites-section">
-      <h4>Mes Favoris</h4>
-      {loadingFavorites ? (
-        <p>Chargement...</p>
-      ) : favoritesError ? (
-        <p className="error">{favoritesError}</p>
-      ) : favorites.length === 0 ? (
-        <p>Aucun favori ajouté</p>
-      ) : (
-        <ul className="favorites-list">
-          {favorites.map((favorite) => (
-            <li key={favorite.ticker}>
-              <button 
-                className="favorite-item" 
-                onClick={() => handleSelectFavorite(favorite.ticker)}
-                title={favorite.name}
-              >
-                {favorite.ticker}
-              </button>
-              <button 
-                className="remove-favorite-button"
-                onClick={() => handleRemoveFavorite(favorite.ticker)}
-                title="Supprimer des favoris"
-              >
-                ×
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-
-            {/* Bouton de déconnexion en bas de la sidebar */}
-            <div className="sidebar-logout">
-               <button onClick={handleLogout} className="logout-button-sidebar">Déconnexion</button>
-            </div>
-
-          </aside>
-
-          {/* --- Zone de Contenu Principal (droite) --- */}
-          <main className="dashboard-main">
-            <h1 className="home-title">
-              {message || "Chargement..."}
-            </h1>
-
-            <div className="chart-container">
-              {historicalData.length > 0 ? (
-                <div className="chart">
-                  <Line key={symbol + period} data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
+   // --- NOUVELLE STRUCTURE DU RETURN ---
+return (
+    <>
+        {/* Modal de confirmation pour la suppression du compte */}
+        {showDeleteModal && (
+            <div className="modal-backdrop">
+                <div className="modal-content">
+                    <h3>Supprimer votre compte?</h3>
+                    <p>
+                        Cette action est irréversible. Toutes vos données, y compris vos favoris, seront définitivement supprimées.
+                    </p>
+                    {deleteError && <p className="error-message">{deleteError}</p>}
+                    <div className="modal-actions">
+                        <button 
+                            onClick={() => setShowDeleteModal(false)}
+                            className="cancel-button"
+                            disabled={deleting}
+                        >
+                            Annuler
+                        </button>
+                        <button 
+                            onClick={handleDeleteAccount}
+                            className="confirm-delete-button"
+                            disabled={deleting}
+                        >
+                            {deleting ? "Suppression..." : "Confirmer la suppression"}
+                        </button>
+                    </div>
                 </div>
-              ) : (
-                <p className="no-data">{message.includes("Erreur") ? message : "Aucune donnée à afficher."}</p>
-              )}
             </div>
-          </main>
+        )}
 
+        {/* Conteneur principal pour la mise en page flex */}
+        <div className="dashboard-layout">
+            {/* --- Colonne Sidebar (gauche) --- */}
+            <aside className="dashboard-sidebar">
+                <h3>beRich</h3>
+
+                {/* --- Section Sélection Titre --- */}
+                <div className="sidebar-section symbol-selection">
+                    <label htmlFor="symbol-select">Titre à Surveiller :</label>
+                    <div className="select-with-action">
+                        <select
+                            id="symbol-select"
+                            value={symbol}
+                            onChange={(e) => setSymbol(e.target.value)}
+                            className="select-field"
+                        >
+                            {cac40Symbols.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                        <button
+                            onClick={handleAddFavorite}
+                            className="add-favorite-button"
+                            title={`Ajouter ${symbol} aux favoris`}
+                            disabled={favoriteStatus === 'loading'}
+                        >
+                            {favoriteStatus === 'loading' ? '...' : '⭐'}
+                        </button>
+                    </div>
+                    {/* Afficher l'erreur d'ajout de favori */}
+                    {favoriteError && <p className="field-error" style={{marginTop: '5px'}}>{favoriteError}</p>}
+                </div>
+
+                {/* Section pour choisir la période */}
+                <div className="sidebar-section">
+                    <label htmlFor="period-select">Période :</label>
+                    <select
+                        id="period-select"
+                        value={period}
+                        onChange={(e) => setPeriod(e.target.value)}
+                        className="select-field"
+                    >
+                        {periods.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* --- Section Mes Favoris --- */}
+                <div className="sidebar-section favorites-section">
+                    <h4>Mes Favoris</h4>
+                    {loadingFavorites ? (
+                        <p>Chargement...</p>
+                    ) : favoritesError ? (
+                        <p className="error">{favoritesError}</p>
+                    ) : favorites.length === 0 ? (
+                        <p>Aucun favori ajouté</p>
+                    ) : (
+                        <ul className="favorites-list">
+                            {favorites.map((favorite) => (
+                                <li key={favorite.ticker}>
+                                    <button 
+                                        className="favorite-item" 
+                                        onClick={() => handleSelectFavorite(favorite.ticker)}
+                                        title={favorite.name}
+                                    >
+                                        {favorite.ticker}
+                                    </button>
+                                    <button 
+                                        className="remove-favorite-button"
+                                        onClick={() => handleRemoveFavorite(favorite.ticker)}
+                                        title="Supprimer des favoris"
+                                    >
+                                        ×
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+
+                {/* Section supprimer le compte */}
+                <div className="sidebar-account-actions">
+                    <button
+                        onClick={() => setShowDeleteModal(true)}
+                        className="delete-account-button"
+                    >
+                        Supprimer mon compte
+                    </button>
+                </div>
+
+                {/* Bouton de déconnexion en bas de la sidebar */}
+                <div className="sidebar-logout">
+                    <button onClick={handleLogout} className="logout-button-sidebar">Déconnexion</button>
+                </div>
+            </aside>
+
+            {/* --- Zone de Contenu Principal (droite) --- */}
+            <main className="dashboard-main">
+                <h1 className="home-title">
+                    {message || "Chargement..."}
+                </h1>
+
+                <div className="chart-container">
+                    {historicalData.length > 0 ? (
+                        <div className="chart">
+                            <Line key={symbol + period} data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
+                        </div>
+                    ) : (
+                        <p className="no-data">{message.includes("Erreur") ? message : "Aucune donnée à afficher."}</p>
+                    )}
+                </div>
+            </main>
         </div>
-    );
-    // --- FIN NOUVELLE STRUCTURE ---
+    </>
+);
 };
 
 export default Home;
-
-
-
-

@@ -219,3 +219,78 @@ html, body, #root {
       margin-top: auto; /* Pousse cette section vers le bas */
        /* ... (styles existants) ... */
   }
+
+  /* Styles pour le bouton de suppression de compte */
+.delete-account-button {
+    background-color: transparent;
+    color: #ff4d4f;
+    border: 1px solid #ff4d4f;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 20px;
+    width: 100%;
+    transition: background-color 0.3s;
+  }
+  
+  .delete-account-button:hover {
+    background-color: rgba(255, 77, 79, 0.1);
+  }
+  
+  /* Styles pour le modal */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .modal-content h3 {
+    color: #ff4d4f;
+    margin-top: 0;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .cancel-button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .confirm-delete-button {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .error-message {
+    color: #ff4d4f;
+    margin: 10px 0;
+  }
