@@ -163,7 +163,8 @@ const Home = () => {
             }
         
             // Définir l'URL de base de l'API
-            const API_BASE_URL = 'https://api.berich.oups.net';
+            //const API_BASE_URL = 'https://api.berich.oups.net';
+            const API_BASE_URL = 'http://localhost:8080';
             const endpoint = `${API_BASE_URL}/api/star`;
             console.log("Token présent:", token ? "Oui" : "Non");
             console.log("Tentative d'ajout du favori:", symbol);
