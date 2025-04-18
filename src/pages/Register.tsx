@@ -48,9 +48,9 @@ const Register: React.FC = () => {
   
   const { username, email, password } = formData;
   
-  const API_URL = "https://api.beRich.oups.net/api/register";
+  //const API_URL = "https://api.beRich.oups.net/api/register";
 
-  //const API_URL = "http://localhost:8080/api/register";
+  const API_URL = "http://localhost:8080/api/register";
 
   // --- Event Handlers ---
 
