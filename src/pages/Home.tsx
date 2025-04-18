@@ -88,8 +88,8 @@ const Home = () => {
 
         // useEffect pour fetch data (inchangé, mais attention à l'URL)
         useEffect(() => {
-            //const API_URL = `http://localhost:8080/finance/history/${symbol}?range=${period}`;
-            const API_URL = `https://api.beRich.oups.net/finance/history/${symbol}?range=${period}`;
+            const API_URL = `http://localhost:8080/finance/history/${symbol}?range=${period}`;
+            //const API_URL = `https://api.beRich.oups.net/finance/history/${symbol}?range=${period}`;
     
             axios.get(API_URL, { withCredentials: true }) 
                 .then(response => {
