@@ -153,6 +153,9 @@ const Home = () => {
         const handleAddFavorite = async () => {
             setFavoriteStatus('loading');
             setFavoriteError('');
+
+            // Sauvegarder le message actuel sur l'historique pour le restaurer après
+            const currentHistoryMessage = message;
             
             // Récupérer le token et vérifier s'il existe
             const token = localStorage.getItem('authToken');
@@ -163,7 +166,6 @@ const Home = () => {
             }
         
             // Définir l'URL de base de l'API
-            //const API_BASE_URL = 'https://api.berich.oups.net';
             const API_BASE_URL = 'http://localhost:8080';
             const endpoint = `${API_BASE_URL}/api/star`;
             console.log("Token présent:", token ? "Oui" : "Non");
@@ -192,9 +194,28 @@ const Home = () => {
                 );
         
                 console.log('Réponse ajout favori:', response);
+                
+                // Ajouter directement le favori à la liste actuelle
+                // Trouver le nom complet du symbole pour l'affichage
+                const symbolName = getFullNameFromSymbol(symbol);
+                
+                // Ajouter le nouveau favori à la liste existante
+                // Vérifiez d'abord si le favori n'existe pas déjà pour éviter les doublons
+                if (!favorites.some(fav => fav.ticker === symbol)) {
+                    setFavorites(prevFavorites => [...prevFavorites, { 
+                        ticker: symbol, 
+                        name: symbolName 
+                    }]);
+                }
+                
                 setFavoriteStatus('success');
-                setMessage(`"${symbol}" ajouté aux favoris !`);
-                setTimeout(() => setMessage(''), 2000);
+                setMessage(`"${symbolName}" ajouté aux favoris !`);
+                // Rétablir le message d'historique après un délai
+                setTimeout(() => {
+                    setMessage(currentHistoryMessage);
+                    // Mettre le status à idle après avoir rétabli le message
+                    setFavoriteStatus('idle');
+                }, 2000);
                 
             } catch (err) {
                 console.error("Erreur lors de l'ajout du favori:", err);
@@ -503,9 +524,9 @@ return (
                                         onClick={() => handleSelectFavorite(favorite.ticker)}
                                         title={favorite.name}
                                     >
-                                        {favorite.ticker}
+                                        {favorite.name}
                                     </button>
-                                    <button 
+                                    <button
                                         className="remove-favorite-button"
                                         onClick={() => handleRemoveFavorite(favorite.ticker)}
                                         title="Supprimer des favoris"
