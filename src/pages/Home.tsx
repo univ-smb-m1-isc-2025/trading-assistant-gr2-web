@@ -314,7 +314,7 @@ const handleDeleteAccount = async () => {
             }
             
             try {
-                const API_BASE_URL = 'http://localhost:8080';
+                const API_BASE_URL = 'https://api.berich.oups.net';
                 const response = await axios.get(`${API_BASE_URL}/api/star`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
