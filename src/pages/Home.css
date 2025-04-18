@@ -1,44 +1,176 @@
-/* src/pages/Home.css */
-html, body, #root {
+:root {
+    --dark-blue: #1C223D;       
+    --medium-blue: #232A4B;     
+    --highlight-blue: #2E3A76;  
+    --accent-blue: #3B68FF;     
+    --text-color: #E0E3F0;      
+    --text-secondary: #8A8EA8;  
+    --card-bg: #2A325A;         
+    --border-color: #343E6A;    
+    --hover-overlay: rgba(59, 104, 255, 0.1);
+  }
+  
+  /* Reset et base */
+  html, body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
   }
   
-  /* Conteneur principal Flexbox */
+  /* Structure principale */
   .dashboard-layout {
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    background-color: #f0f2f5;
+    max-height: 100vh;
+    overflow: hidden;
+    background-color: var(--dark-blue);
+  }
+  
+  /* Header utilisateur */
+  .user-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 12px 25px;
+    background-color: var(--medium-blue);
+    height: 60px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+  }
+  
+  .user-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .user-button {
+    display: flex;
+    align-items: center;
+    background: var(--highlight-blue);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .user-button:hover {
+    background: var(--accent-blue);
+  }
+  
+  .user-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--accent-blue);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+  .dropdown-arrow {
+    margin-left: 8px;
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background-color: var(--medium-blue);
+    min-width: 180px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 8px 0;
+    display: none;
+    z-index: 101;
+  }
+  
+  .user-dropdown:hover .dropdown-menu,
+  .user-dropdown:focus-within .dropdown-menu {
+    display: block;
+    animation: fadeIn 0.2s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .dropdown-item {
+    display: block;
+    padding: 12px 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: background-color 0.2s;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .dropdown-item:hover {
+    background-color: var(--highlight-blue);
+  }
+  
+  .dropdown-item:first-child {
+    color: var(--danger-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  /* Conteneur principal sidebar + contenu */
+  .dashboard-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
   }
   
   /* Barre latérale */
   .dashboard-sidebar {
     width: 260px;
     flex-shrink: 0;
-    background-color: #001529;
-    color: rgba(255, 255, 255, 0.8);
+    background-color: var(--medium-blue);
+    color: var(--text-color);
     padding: 25px 20px;
-    height: 100vh; 
+    height: calc(100vh - 60px);
     overflow-y: auto;
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
-    
-    /* Configuration flex pour positionner le bouton déconnexion en bas */
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
   }
   
-  .dashboard-sidebar h3 {
-    color: #ffffff;
-    font-size: 1.3em;
+  .logo-container {
+    display: flex;
+    justify-content: center;
     margin-bottom: 25px;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .logo {
+    max-width: 150px;
+    height: auto;
+    transition: transform 0.3s ease;
+    margin-bottom: -40px;
+    margin-top: -40px;
+  }
+  
+  .logo:hover {
+    transform: scale(1.05);
   }
   
   .sidebar-section {
     margin-bottom: 25px;
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
   }
   
   .sidebar-section label {
@@ -46,126 +178,79 @@ html, body, #root {
     margin-bottom: 8px;
     font-size: 0.9em;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
   }
   
-  .dashboard-sidebar .select-field {
+  .select-field {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
-    border: 1px solid #303e4d;
-    border-radius: 4px;
-    background-color: #001f3a; 
-    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--dark-blue);
+    color: var(--text-color);
     outline: none;
     cursor: pointer;
   }
-  .dashboard-sidebar .select-field:focus {
-      border-color: #1890ff; 
-      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  
+  .select-field:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(59, 104, 255, 0.2);
   }
   
-  /* Section Déconnexion en bas */
-  .sidebar-logout {
-      margin-top: auto; 
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .logout-button-sidebar {
-      width: 100%;
-      padding: 10px;
-      background-color: transparent;
-      color: #ff4d4f; 
-      border: 1px solid #ff4d4f;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 500;
-      transition: background-color 0.3s, color 0.3s;
-      text-align: center;
-  }
-  .logout-button-sidebar:hover {
-      background-color: rgba(255, 77, 79, 0.1); 
-  }
-  
-  /* Contenu Principal */
-  .dashboard-main {
-    flex-grow: 1;
-    padding: 30px 40px;
-    overflow-y: auto;
-    min-height: 100vh; 
-  }
-  
-  /* Styles existants pour le titre et le graphique, peuvent rester */
-  .dashboard-main .home-title {
-    color: #333;
-    border-bottom: 3px solid #1890ff;
-    padding-bottom: 15px;
-    margin-bottom: 30px;
-    font-size: 1.8em; 
-    font-weight: 600;
-  }
-  
-  .dashboard-main .chart-container {
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
-    border-radius: 8px;
-    width: 100%;
-    padding: 2rem;
-    border: 1px solid #e8e8e8;
-  }
-  .dashboard-main .chart {
-    height: 450px; 
-  }
-  .dashboard-main .no-data {
-    font-size: 1.1em;
-    color: #888;
-    text-align: center;
-    padding: 50px;
-  }
-
-
-/* Pour aligner le select et le bouton favori */
-.select-with-action {
+  /* Pour aligner le select et le bouton favori */
+  .select-with-action {
     display: flex;
     align-items: center;
-    gap: 8px; 
+    gap: 8px;
   }
   
   .select-with-action .select-field {
-     flex-grow: 1; 
+    flex-grow: 1;
   }
   
   .add-favorite-button {
-    background: none;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 0.7);
-    padding: 8px 10px; 
-    border-radius: 4px;
+    background: var(--accent-blue);
+    border: none;
+    color: var(--text-color);
+    padding: 8px 10px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 1.1em; 
+    font-size: 1.1em;
     line-height: 1;
-    transition: background-color 0.2s, color 0.2s;
-    flex-shrink: 0; 
+    transition: all 0.2s ease;
+    flex-shrink: 0;
   }
   
   .add-favorite-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
   
   /* Section Favoris */
   .favorites-section {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
   }
   
   .favorites-section h4 {
-    color: #ffffff;
+    color: var(--text-secondary);
     margin-bottom: 15px;
     font-size: 1.1em;
+    position: relative;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .favorites-section h4::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    width: 40px;
+    background-color: var(--accent-blue);
   }
   
   .favorites-list {
@@ -179,115 +264,220 @@ html, body, #root {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
-    padding: 5px 0;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1); 
+    padding: 8px 10px;
+    border-radius: 6px;
+    background-color: var(--dark-blue);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+  }
+  
+  .favorites-list li:hover {
+    background-color: var(--highlight-blue);
+    transform: translateX(2px);
   }
   
   .favorite-item {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-color);
     cursor: pointer;
     padding: 5px;
     text-align: left;
-    flex-grow: 1; 
+    flex-grow: 1;
     font-size: 0.95em;
+    transition: color 0.2s ease;
   }
+  
   .favorite-item:hover {
-    color: #1890ff;
+    color: var(--accent-blue);
   }
   
   .remove-favorite-button {
     background: none;
     border: none;
-    color: #ff4d4f;
+    color: var(--danger-color);
     cursor: pointer;
-    font-size: 1.2em; 
+    font-size: 1.2em;
     padding: 0 5px;
     opacity: 0.7;
     transition: opacity 0.2s;
   }
+  
   .remove-favorite-button:hover {
-      opacity: 1;
+    opacity: 1;
   }
   
-
-  .sidebar-logout {
-      margin-top: auto; /* Pousse cette section vers le bas */
-       /* ... (styles existants) ... */
+  /* Gestion des erreurs */
+  .field-error, .error {
+    color: var(--danger-color);
+    font-size: 0.85em;
+    margin-top: 5px;
   }
-
-  /* Styles pour le bouton de suppression de compte */
-.delete-account-button {
-    background-color: transparent;
-    color: #ff4d4f;
-    border: 1px solid #ff4d4f;
-    padding: 8px 12px;
+  
+  /* Zone de contenu principal */
+  .dashboard-main {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #ffffff;
+    color: #1C223D;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+  }
+  
+  .home-title {
+    color: #1C223D; 
+    background-color: #f0f2f5; 
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px 8px 0 0;
+    border: 1px solid #e1e4e8;
+    border-bottom: none;
+    font-weight: 700;
+  }
+  
+  .chart-container {
+    background-color: #ffffff; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 8px 8px; 
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    margin-top: -1px; 
+  }
+  
+  .chart {
+    height: 450px;
     border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    margin-top: 20px;
-    width: 100%;
-    transition: background-color 0.3s;
+    overflow: hidden;
   }
   
-  .delete-account-button:hover {
-    background-color: rgba(255, 77, 79, 0.1);
+  .chart-container:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
   }
   
-  /* Styles pour le modal */
+  
+  .no-data {
+    font-size: 1.1em;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 50px;
+  }
+  
+  /* Modal */
   .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(3px);
   }
   
   .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
+    background-color: var(--medium-blue);
+    padding: 25px;
+    border-radius: 12px;
     max-width: 500px;
     width: 90%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    animation: modalFadeIn 0.3s ease;
+  }
+  
+  @keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   
   .modal-content h3 {
-    color: #ff4d4f;
+    color: var(--danger-color);
     margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .modal-content p {
+    color: var(--text-color);
+    line-height: 1.5;
+    margin-bottom: 15px;
   }
   
   .modal-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 15px;
+    margin-top: 25px;
   }
   
   .cancel-button {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    background-color: var(--dark-blue);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: p6x;
     cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .cancel-button:hover {
+    background-color: var(--highlight-blue);
+  }
+  
+  .cancel-button:disabled,
+  .confirm-delete-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
   
   .confirm-delete-button {
-    background-color: #ff4d4f;
+    background-color: var(--danger-color);
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .confirm-delete-button:hover:not(:disabled) {
+    background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(231, 76, 60, 0.3);
   }
   
   .error-message {
-    color: #ff4d4f;
-    margin: 10px 0;
+    color: var(--danger-color);
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  
+  /* Responsive pour les petits écrans */
+  @media (max-width: 768px) {
+    .dashboard-content {
+      flex-direction: column;
+    }
+    
+    .dashboard-sidebar {
+      width: 100%;
+      height: auto;
+      max-height: 50vh;
+    }
+    
+    .dashboard-main {
+      padding: 15px;
+    }
+    
+    .chart {
+      height: 350px;
+    }
   }

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import './HomeModern.css';
 
-// Enregistrement des composants Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Home = () => {
@@ -228,7 +227,7 @@ const Home = () => {
             }
         };
 
-        // Updated handleDeleteAccount function with better debugging
+
 const handleDeleteAccount = async () => {
     setDeleting(true);
     setDeleteError('');
@@ -243,8 +242,6 @@ const handleDeleteAccount = async () => {
     try {
         const API_BASE_URL = 'https://api.berich.oups.net';
         const endpoint = `${API_BASE_URL}/api/user/delete`;
-        
-        // Debug the request
         console.log(`Sending DELETE request to: ${endpoint}`);
         console.log(`Using token (first 10 chars): ${token.substring(0, 10)}...`);
         
@@ -252,7 +249,6 @@ const handleDeleteAccount = async () => {
             console.warn("Warning: Token doesn't start with 'ey'. It might not be a valid JWT.");
         }
         
-        // Detailed request configuration for debugging
         const config = {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -262,7 +258,6 @@ const handleDeleteAccount = async () => {
         };
         console.log("Request config:", JSON.stringify(config, null, 2));
         
-        // Make the request with explicit debugging
         const response = await axios.delete(endpoint, config);
         
         console.log("Delete account response:", response);
@@ -273,7 +268,6 @@ const handleDeleteAccount = async () => {
     } catch (error) {
         console.error("Erreur lors de la suppression du compte:", error);
         
-        // Enhanced error debugging
         if (axios.isAxiosError(error)) {
             console.error("Status code:", error.response?.status);
             console.error("Response data:", error.response?.data);
@@ -284,7 +278,6 @@ const handleDeleteAccount = async () => {
             } else if (error.response?.status === 403) {
                 setDeleteError("Vous n'êtes pas autorisé à supprimer ce compte. Essayez de vous reconnecter.");
                 
-                // Force logout on auth errors
                 setTimeout(() => {
                     localStorage.removeItem('authToken');
                     navigate('/login', { state: { message: "Session expirée. Veuillez vous reconnecter." } });
