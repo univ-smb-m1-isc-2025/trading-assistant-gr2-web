@@ -40,14 +40,14 @@
   .form-group input:focus,
   .form-group input:hover {
     outline: none;
-    border-color: #1890ff; /* Bleu primaire au focus/survol */
+    border-color: #1890ff; 
     box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
   }
   
   button[type="submit"] {
     width: 100%;
     padding: 12px;
-    background-color: #1890ff; /* Bleu primaire */
+    background-color: #1890ff; 
     color: white;
     border: none;
     border-radius: 4px;
@@ -59,11 +59,11 @@
   }
   
   button[type="submit"]:hover {
-    background-color: #40a9ff; /* Bleu plus clair au survol */
+    background-color: #40a9ff;
   }
   
   button[type="submit"]:disabled {
-      background-color: #91d5ff; /* Bleu très clair si désactivé */
+      background-color: #91d5ff; 
       cursor: not-allowed;
   }
   
@@ -78,26 +78,26 @@
   }
   
   .success-message {
-    color: #52c41a; /* Vert */
+    color: #52c41a; 
     background-color: #f6ffed;
     border: 1px solid #b7eb8f;
   }
   
   .error-message {
-    color: #ff4d4f; /* Rouge */
+    color: #ff4d4f; 
     background-color: #fff1f0;
     border: 1px solid #ffa39e;
   }
   
   .field-error {
-    color: #ff4d4f; /* Rouge */
+    color: #ff4d4f; 
     font-size: 0.8em;
     display: block;
     margin-top: 4px;
   }
   
   /* Liens de navigation sous les formulaires */
-  .form-container .navigation-link { /* Ajoutez cette classe au <p> contenant le <Link> */
+  .form-container .navigation-link { 
       margin-top: 25px;
       text-align: center;
       font-size: 0.9em;
@@ -113,11 +113,10 @@
       text-decoration: underline;
   }
 
-  /* Ajouter à src/components/Form.css */
 
 .divider {
   text-align: center;
-  margin: 25px 0; /* Espace autour */
+  margin: 25px 0; 
   color: #aaa;
   font-weight: 500;
   font-size: 0.9em;
@@ -131,9 +130,9 @@
   content: '';
   position: absolute;
   top: 50%;
-  width: calc(50% - 25px); /* Ajustez la largeur des lignes */
+  width: calc(50% - 25px); 
   height: 1px;
-  background-color: #e0e0e0; /* Couleur de la ligne */
+  background-color: #e0e0e0; 
 }
 
 .divider::before {
@@ -146,7 +145,7 @@
 
 .google-login-button-container {
   display: flex;
-  justify-content: center; /* Centre le bouton Google */
+  justify-content: center; 
   margin-bottom: 20px;
   margin-top: 10px;
 }

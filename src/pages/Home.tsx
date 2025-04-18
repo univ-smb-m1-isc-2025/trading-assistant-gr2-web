@@ -69,14 +69,13 @@ const Home = () => {
 
         // useEffect pour fetch data (inchangé, mais attention à l'URL)
         useEffect(() => {
-            const API_URL = `http://localhost:8080/finance/history/${symbol}?range=${period}`;
-            // const API_URL = `https://api.beRich.oups.net/finance/history/${symbol}?range=${period}`;
+            //const API_URL = `http://localhost:8080/finance/history/${symbol}?range=${period}`;
+            const API_URL = `https://api.beRich.oups.net/finance/history/${symbol}?range=${period}`;
     
-            axios.get(API_URL, { withCredentials: true }) // Ajoutez withCredentials si votre API le requiert et est configurée pour
+            axios.get(API_URL, { withCredentials: true }) 
                 .then(response => {
                     if (response.data && response.data.chart && response.data.chart.result && response.data.chart.result.length > 0) {
                         const result = response.data.chart.result[0];
-                        // Vérifier que les indicateurs et timestamps existent
                         if (result.indicators && result.indicators.quote && result.indicators.quote.length > 0 && result.indicators.quote[0].close && result.timestamp) {
                            const closePrices = result.indicators.quote[0].close;
                            const timestamps = result.timestamp;
@@ -84,11 +83,10 @@ const Home = () => {
                            const data = closePrices
                                 .map((close: number | null, index: number) => ({
                                     date: new Date(timestamps[index] * 1000).toLocaleDateString(),
-                                    close // Garder null si c'est null
+                                    close 
                                 }))
-                                .filter((item: { date: string; close: number | null }) => item.close !== null); // Filtrer les points où close est null
+                                .filter((item: { date: string; close: number | null }) => item.close !== null); 
     
-                            // @ts-ignore -> Forcer le type après filtrage
                             setHistoricalData(data);
                             setMessage(`Historique des prix pour ${symbol} sur ${period}`);
                         } else {
@@ -105,18 +103,14 @@ const Home = () => {
                 })
                 .catch(error => {
                     console.error("Erreur lors de la récupération des données API:", error);
-                    // Afficher une erreur plus spécifique si possible
                     if (axios.isAxiosError(error) && error.response?.status === 401) {
                          setMessage("Erreur: Non autorisé à accéder aux données.");
-                         // Rediriger vers login si token invalide?
-                         // localStorage.removeItem('authToken');
-                         // navigate('/login');
                     } else {
                         setMessage("Erreur lors de la récupération des données.");
                     }
-                    setHistoricalData([]); // Vider les données en cas d'erreur
+                    setHistoricalData([]); 
                 });
-        }, [symbol, period, navigate]); // Ajouter navigate aux dépendances
+        }, [symbol, period, navigate]);
 
     const chartData = {
         labels: historicalData.map(data => data.date),
@@ -150,7 +144,7 @@ const Home = () => {
             }
         
             // Définir l'URL de base de l'API
-            const API_BASE_URL = 'http://localhost:8080';
+            const API_BASE_URL = 'https://api.berich.oups.net';
             const endpoint = `${API_BASE_URL}/api/star`;
             console.log("Token présent:", token ? "Oui" : "Non");
             console.log("Tentative d'ajout du favori:", symbol);
@@ -227,14 +221,13 @@ const handleDeleteAccount = async () => {
     }
   
     try {
-        const API_BASE_URL = 'http://localhost:8080';
+        const API_BASE_URL = 'https://api.berich.oups.net';
         const endpoint = `${API_BASE_URL}/api/user/delete`;
         
         // Debug the request
         console.log(`Sending DELETE request to: ${endpoint}`);
         console.log(`Using token (first 10 chars): ${token.substring(0, 10)}...`);
         
-        // Check if token is properly formatted (should start with "ey")
         if (!token.startsWith('ey')) {
             console.warn("Warning: Token doesn't start with 'ey'. It might not be a valid JWT.");
         }
@@ -245,7 +238,7 @@ const handleDeleteAccount = async () => {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            withCredentials: true // Important for CORS with credentials
+            withCredentials: true 
         };
         console.log("Request config:", JSON.stringify(config, null, 2));
         
@@ -266,7 +259,6 @@ const handleDeleteAccount = async () => {
             console.error("Response data:", error.response?.data);
             console.error("Response headers:", error.response?.headers);
             
-            // Handle specific HTTP status codes
             if (error.response?.status === 404) {
                 setDeleteError("L'API de suppression de compte n'est pas accessible. Vérifiez que l'endpoint /api/user/delete existe sur le serveur.");
             } else if (error.response?.status === 403) {
@@ -320,7 +312,6 @@ const handleDeleteAccount = async () => {
                 setFavorites(response.data);
             } catch (error) {
                 console.error("Erreur lors du chargement des favoris:", error);
-                // Correction ici: Vérification du type d'erreur
                 if (axios.isAxiosError(error)) {
                     setFavoritesError(error.response?.data?.message || "Impossible de charger les favoris");
                 } else {
@@ -350,7 +341,6 @@ const handleDeleteAccount = async () => {
                 
             } catch (error) {
                 console.error("Erreur lors de la suppression du favori:", error);
-                // Correction ici: Vérification du type d'erreur
                 if (axios.isAxiosError(error)) {
                     setFavoriteError(error.response?.data?.message || "Impossible de supprimer le favori");
                 } else {
@@ -376,7 +366,6 @@ const handleDeleteAccount = async () => {
             }
         }, [favoriteStatus]);
 
-   // --- NOUVELLE STRUCTURE DU RETURN ---
 return (
     <>
         {/* Modal de confirmation pour la suppression du compte */}

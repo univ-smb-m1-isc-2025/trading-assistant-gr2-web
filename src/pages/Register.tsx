@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import axios, { AxiosError } from "axios"; // Import Axios types
+import axios, { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./Form.css";
 
@@ -17,7 +17,6 @@ interface FieldErrors {
   username?: string;
   email?: string;
   password?: string;
-  // Add other fields if needed
 }
 
 // Interface for the expected successful response structure (adjust as needed)
@@ -29,9 +28,8 @@ interface RegistrationSuccessResponse {
 
 // Interface for expected error response (e.g., conflict)
 interface ErrorResponse {
-  error?: string; // For general errors like 409 Conflict
-  message?: string; // Could be used by some errors
-  // If validation errors (400) have a different structure, handle separately
+  error?: string; 
+  message?: string; 
 }
 
 // --- Component ---
@@ -44,16 +42,15 @@ const Register: React.FC = () => {
     email: "",
     password: "",
   });
-  const [message, setMessage] = useState<string>(""); // For success/general messages
-  const [error, setError] = useState<string>(""); // For general error messages
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({}); // For specific field errors
+  const [message, setMessage] = useState<string>(""); 
+  const [error, setError] = useState<string>(""); 
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({}); 
   
   const { username, email, password } = formData;
   
-  // IMPORTANT: Update API URL to your backend host
-  //const API_URL = "https://api.beRich.oups.net/api/register";
+  const API_URL = "https://api.beRich.oups.net/api/register";
 
-  const API_URL = "http://localhost:8080/api/register";
+  //const API_URL = "http://localhost:8080/api/register";
 
   // --- Event Handlers ---
 
@@ -74,7 +71,6 @@ const Register: React.FC = () => {
     setFieldErrors({});
 
     try {
-      // Using Axios with types for response
       const response = await axios.post<RegistrationSuccessResponse>(
         API_URL,
         formData,
@@ -90,10 +86,10 @@ const Register: React.FC = () => {
         response.data.message ||
           `Registration successful for ${response.data.username}!`
       );
-      setFormData({ username: "", email: "", password: "" }); // Clear form on success
+      setFormData({ username: "", email: "", password: "" }); 
 
       setTimeout(() => {
-        navigate("/login"); // Redirige vers la page de connexion
+        navigate("/login"); 
       }, 1500);
     } catch (err) {
       console.error("Registration error:", err);
@@ -102,20 +98,17 @@ const Register: React.FC = () => {
       ); // Default error
 
       if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError; // Type assertion
+        const axiosError = err as AxiosError; 
         if (axiosError.response) {
           // Backend responded with an error status code
           const status = axiosError.response.status;
-          const data = axiosError.response.data; // data can be anything, needs checking
+          const data = axiosError.response.data; 
           console.error(`Backend error: Status ${status}`, data);
 
           if (status === 400 && typeof data === "object" && data !== null) {
-            // Handle validation errors (assuming data is FieldErrors)
             setError("Please fix the errors below.");
-            // Be careful with direct type assertion, ensure backend sends this structure
             setFieldErrors(data as FieldErrors);
           } else if (status === 409) {
-            // Handle conflict errors (assuming data is ErrorResponse or string)
             if (typeof data === "string") {
               setError(data);
             } else if (
@@ -125,26 +118,23 @@ const Register: React.FC = () => {
             ) {
               setError((data as ErrorResponse).error!);
             } else {
-              setError("Username or email already exists."); // Fallback
+              setError("Username or email already exists."); 
             }
           } else if (typeof data === "string" && data) {
-            setError(data); // Display string error from backend
+            setError(data); 
           } else if (
             typeof data === "object" &&
             data !== null &&
             (data as ErrorResponse).message
           ) {
-            setError((data as ErrorResponse).message!); // Display message if available
+            setError((data as ErrorResponse).message!); 
           }
         } else if (axiosError.request) {
-          // Request was made but no response received (network error, backend down)
           setError("Could not connect to the server. Please try again later.");
         } else {
-          // Something happened in setting up the request
           setError(`An error occurred: ${axiosError.message}`);
         }
       } else {
-        // Handle non-Axios errors (e.g., JavaScript errors)
         setError(
           `An unexpected error occurred: ${
             err instanceof Error ? err.message : "Unknown error"
@@ -178,12 +168,12 @@ const Register: React.FC = () => {
               <input
                 type="text"
                 id="username"
-                name="username" // Must match key in FormData state
+                name="username" 
                 value={username}
                 onChange={onChange}
                 required
                 minLength={3}
-                aria-invalid={!!fieldErrors.username} // Accessibility
+                aria-invalid={!!fieldErrors.username} 
                 aria-describedby={
                   fieldErrors.username ? "username-error" : undefined
                 }

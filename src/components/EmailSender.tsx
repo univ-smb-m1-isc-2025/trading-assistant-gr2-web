@@ -7,13 +7,13 @@ const EmailSender = () => {
     const [alerteId, setAlerteId] = useState<number>(0);
     const [message, setMessage] = useState("");
 
-    const local = "http://localhost:8080/api/email/send";
-    //const serveur = "https://api.berich.oups.net/api/email/send";
+    //const local = "http://localhost:8080/api/email/send";
+    const serveur = "https://api.berich.oups.net/api/email/send";
 
     const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-        const res = await axios.post(local, {
+        const res = await axios.post(serveur, {
             email,
             nomCours,
             alerteId

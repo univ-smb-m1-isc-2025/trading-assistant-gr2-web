@@ -1,9 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-// Importez votre contexte d'authentification si vous en utilisez un
-// import { AuthContext } from '../context/AuthContext';
-import "./Form.css"; // Réutilisez le style si applicable'
+import "./Form.css"; 
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 // Interfaces pour la requête et la réponse
@@ -28,10 +26,10 @@ const LoginPage: React.FC = () => {
 
   const { usernameOrEmail, password } = formData;
 
-  //const API_LOGIN_URL = "https://api.beRich.oups.net/api/login";
-  const API_LOGIN_URL = 'http://localhost:8080/api/login';
-  //const API_GOOGLE_AUTH_URL = "https://api.beRich.oups.net/api/auth/google";
-  const API_GOOGLE_AUTH_URL = 'http://localhost:8080/api/auth/google'
+  const API_LOGIN_URL = "https://api.beRich.oups.net/api/login";
+  //const API_LOGIN_URL = 'http://localhost:8080/api/login';
+  const API_GOOGLE_AUTH_URL = "https://api.beRich.oups.net/api/auth/google";
+  //const API_GOOGLE_AUTH_URL = 'http://localhost:8080/api/auth/google'
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -55,15 +53,10 @@ const LoginPage: React.FC = () => {
       const token = response.data.token;
       console.log("Login successful, token:", token);
 
-      // --- Stocker le token ---
-      // Méthode simple : localStorage (accessible par JS, sensible au XSS)
       localStorage.setItem("authToken", token);
 
-      // --- Mettre à jour l'état global (si Contexte/Redux/Zustand utilisé) ---
-      // auth?.login(token); // Exemple avec contexte
-
       // --- Rediriger vers la page d'accueil ---
-      navigate("/home"); // Ou la route de votre tableau de bord
+      navigate("/home"); 
     } catch (err) {
       console.error("Login error:", err);
       setLoading(false);
@@ -88,9 +81,7 @@ const LoginPage: React.FC = () => {
   ) => {
     console.log("Google Login Success Response:", credentialResponse);
     setError("");
-    // Note : Pas besoin de setLoading ici car le bouton Google gère son état
 
-    // Le token ID JWT de Google se trouve dans credentialResponse.credential
     const googleIdToken = credentialResponse.credential;
 
     if (!googleIdToken) {
@@ -99,9 +90,6 @@ const LoginPage: React.FC = () => {
     }
 
     try {
-      // Envoyer ce token ID à VOTRE backend pour validation
-      // Le backend vérifiera le token Google, trouvera/créera l'utilisateur,
-      // et renverra VOTRE propre token JWT d'application.
       const response = await axios.post<LoginResponse>(
         API_GOOGLE_AUTH_URL,
         { token: googleIdToken },
@@ -110,13 +98,12 @@ const LoginPage: React.FC = () => {
         }
       );
 
-      const appToken = response.data.token; // Le token JWT de VOTRE application
+      const appToken = response.data.token; 
       console.log(
         "Connexion via Google réussie (backend), token app:",
         appToken
       );
 
-      // Stocker VOTRE token et naviguer
       localStorage.setItem("authToken", appToken);
       navigate("/home");
     } catch (err) {
@@ -153,7 +140,7 @@ const LoginPage: React.FC = () => {
                 Nom d'utilisateur ou Email
               </label>
               <input
-                type="text" // ou 'email' si vous préférez
+                type="text" 
                 id="usernameOrEmail"
                 name="usernameOrEmail"
                 value={usernameOrEmail}
@@ -185,11 +172,7 @@ const LoginPage: React.FC = () => {
             <GoogleLogin
               onSuccess={handleGoogleLoginSuccess}
               onError={handleGoogleLoginError}
-              // theme="outline" // autres options: outline, filled_black, filled_blue
-              // size="large"
-              // shape="rectangular" // ou circle, pill
-              // width="320px" // Ajustez si besoin
-              useOneTap // Permet le "One Tap Sign-in" s'il est configuré
+              useOneTap 
             />
           </div>
           <p className="navigation-link">

@@ -6,8 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f2f5; /* Fond général gris très clair */
-  color: #333; /* Couleur de texte par défaut */
+  background-color: #f0f2f5; 
+  color: #333; 
 }
 
 /* Réinitialisation de base et box-sizing */
@@ -18,12 +18,10 @@ body {
 }
 
 a {
-  color: #1890ff; /* Un bleu standard pour les liens */
+  color: #1890ff; 
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
 }
-
-/* IMPORTANT : Supprimez toutes les autres règles qui étaient ici (venant de Vite : :root, h1, button, @media etc.) */
