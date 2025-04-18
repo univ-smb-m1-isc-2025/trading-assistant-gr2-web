@@ -3,7 +3,7 @@ import axios from "axios";
 import { Line } from "react-chartjs-2";
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
-import './Home.css';
+import './HomeModern.css';
 
 // Enregistrement des composants Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -32,6 +32,7 @@ const Home = () => {
         { label: "1 an", value: "1y" },
         { label: "5 ans", value: "5y" }
     ];
+
 
     const cac40Symbols = [
         { label: "Airbus", value: "AIR.PA" },
@@ -64,6 +65,25 @@ const Home = () => {
         { label: "Worldline", value: "WLDGF.PA" }
     ];
 
+    const getFullNameFromSymbol = (symbolValue: string): string => {
+        const found = cac40Symbols.find(item => item.value === symbolValue);
+        return found ? found.label : symbolValue;
+      };
+      
+      // Ajoutez les types aux paramètres
+      const formatPeriod = (periodValue: string): string => {
+        const periodMap: Record<string, string> = {
+          "3d": "3 derniers jours",
+          "1mo": "1 mois",
+          "3mo": "3 mois",
+          "6mo": "6 mois",
+          "1y": "1 an",
+          "5y": "5 ans"
+        };
+        
+        return periodMap[periodValue] || periodValue;
+      };
+
     //const serverURL = "https://api.berich.oups.net/finance/history/${symbol}?range=${period}";
     //const localURL = "http://localhost:8080/finance/history/${symbol}?range=${period}";
 
@@ -88,7 +108,7 @@ const Home = () => {
                                 .filter((item: { date: string; close: number | null }) => item.close !== null); 
     
                             setHistoricalData(data);
-                            setMessage(`Historique des prix pour ${symbol} sur ${period}`);
+                            setMessage(`Historique des prix pour ${getFullNameFromSymbol(symbol)} sur ${formatPeriod(period)}`);
                         } else {
                              console.error("Données de graphique manquantes dans la réponse API:", result);
                              setHistoricalData([]); // Vider les données
@@ -367,41 +387,63 @@ const handleDeleteAccount = async () => {
         }, [favoriteStatus]);
 
 return (
-    <>
-        {/* Modal de confirmation pour la suppression du compte */}
-        {showDeleteModal && (
-            <div className="modal-backdrop">
-                <div className="modal-content">
-                    <h3>Supprimer votre compte?</h3>
-                    <p>
-                        Cette action est irréversible. Toutes vos données, y compris vos favoris, seront définitivement supprimées.
-                    </p>
-                    {deleteError && <p className="error-message">{deleteError}</p>}
-                    <div className="modal-actions">
-                        <button 
-                            onClick={() => setShowDeleteModal(false)}
-                            className="cancel-button"
-                            disabled={deleting}
-                        >
-                            Annuler
-                        </button>
-                        <button 
-                            onClick={handleDeleteAccount}
-                            className="confirm-delete-button"
-                            disabled={deleting}
-                        >
-                            {deleting ? "Suppression..." : "Confirmer la suppression"}
-                        </button>
-                    </div>
+<>
+    {/* Modal de confirmation pour la suppression du compte */}
+    {showDeleteModal && (
+        <div className="modal-backdrop">
+            <div className="modal-content">
+                <h3>Supprimer votre compte?</h3>
+                <p>
+                    Cette action est irréversible. Toutes vos données, y compris vos favoris, seront définitivement supprimées.
+                </p>
+                {deleteError && <p className="error-message">{deleteError}</p>}
+                <div className="modal-actions">
+                    <button 
+                        onClick={() => setShowDeleteModal(false)}
+                        className="cancel-button"
+                        disabled={deleting}
+                    >
+                        Annuler
+                    </button>
+                    <button 
+                        onClick={handleDeleteAccount}
+                        className="confirm-delete-button"
+                        disabled={deleting}
+                    >
+                        {deleting ? "Suppression..." : "Confirmer la suppression"}
+                    </button>
                 </div>
             </div>
-        )}
+        </div>
+    )}
 
-        {/* Conteneur principal pour la mise en page flex */}
-        <div className="dashboard-layout">
+    {/* Conteneur principal pour la mise en page flex */}
+    <div className="dashboard-layout">
+        {/* Bande utilisateur en haut */}
+        <header className="user-header">
+            <div className="user-dropdown">
+                <button className="user-button">
+                    <div className="user-icon">
+                        <i className="fas fa-user"></i>
+                    </div>
+                    <span>Mon Compte</span>
+                    <span className="dropdown-arrow">▼</span>
+                </button>
+                
+                <div className="dropdown-menu">
+                    <div className="dropdown-item" onClick={() => setShowDeleteModal(true)}>Supprimer mon compte</div>
+                    <div className="dropdown-item" onClick={handleLogout}>Déconnexion</div>
+                </div>
+            </div>
+        </header>
+        
+        {/* Contenu principal (sidebar + main) */}
+        <div className="dashboard-content">
             {/* --- Colonne Sidebar (gauche) --- */}
             <aside className="dashboard-sidebar">
-                <h3>beRich</h3>
+            <div className="logo-container">
+  <img src="BeRich.svg" alt="beRich Logo" className="logo" />
+</div>
 
                 {/* --- Section Sélection Titre --- */}
                 <div className="sidebar-section symbol-selection">
@@ -481,21 +523,6 @@ return (
                         </ul>
                     )}
                 </div>
-
-                {/* Section supprimer le compte */}
-                <div className="sidebar-account-actions">
-                    <button
-                        onClick={() => setShowDeleteModal(true)}
-                        className="delete-account-button"
-                    >
-                        Supprimer mon compte
-                    </button>
-                </div>
-
-                {/* Bouton de déconnexion en bas de la sidebar */}
-                <div className="sidebar-logout">
-                    <button onClick={handleLogout} className="logout-button-sidebar">Déconnexion</button>
-                </div>
             </aside>
 
             {/* --- Zone de Contenu Principal (droite) --- */}
@@ -515,8 +542,9 @@ return (
                 </div>
             </main>
         </div>
-    </>
+    </div>
+</>
 );
-};
+}
 
 export default Home;
