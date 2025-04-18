@@ -6,7 +6,9 @@
     --text-color: #E0E3F0;      
     --text-secondary: #8A8EA8;  
     --card-bg: #2A325A;         
-    --border-color: #343E6A;    
+    --border-color: #343E6A;
+    --success-color: #2ECC71;  
+    --danger-color: #E74C3C;    
     --hover-overlay: rgba(59, 104, 255, 0.1);
   }
   
