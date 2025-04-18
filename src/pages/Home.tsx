@@ -3,7 +3,7 @@ import axios from "axios";
 import { Line } from "react-chartjs-2";
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
-import './HomeModern.css';
+import './Home.css';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
